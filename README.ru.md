@@ -24,7 +24,7 @@ Mac на Intel пока не поддерживаются.
 Вставьте эту строку в Терминал:
 
 ```sh
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh)"
+curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh | bash
 ```
 
 Это занимает около двух минут; права администратора, Homebrew и Xcode не нужны. Установщик:

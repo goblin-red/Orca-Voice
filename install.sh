@@ -3,7 +3,7 @@
 # сам скачивает программу, свой Python, whisper-server и модель Whisper.
 #
 #   установить или обновить:
-#     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh)"
+#     curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh | bash
 #   удалить:
 #     ~/.goblin-voice/install.sh --uninstall
 #
