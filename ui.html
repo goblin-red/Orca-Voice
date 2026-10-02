@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Orca Voice</title>
+<title>Goblin Voice</title>
 <style>
   :root {
     --bg: #f4f4f6;
@@ -198,6 +198,7 @@
     display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0 12px;
   }
   header h1 { font-size: 18px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  header h1 .logo { height: 26px; width: auto; display: block; }
   .tabs { display: flex; gap: 4px; margin-left: auto; }
 
   /* переключатель языка */
@@ -269,7 +270,7 @@
 <body>
 <header>
   <div class="inner">
-    <h1>🎙 Orca Voice</h1>
+    <h1><img class="logo" src="/logo.svg" alt=""> Goblin Voice</h1>
     <nav class="tabs">
       <button data-tab="dash" class="on" data-i18n="tab.dash"></button>
       <button data-tab="settings" data-i18n="tab.settings"></button>

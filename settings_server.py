@@ -18,6 +18,7 @@ MODELS = HERE / "models"
 PAGES = {
     "/": ("ui.html", "text/html; charset=utf-8"),
     "/ui_texts.js": ("ui_texts.js", "application/javascript; charset=utf-8"),
+    "/logo.svg": ("logo.svg", "image/svg+xml"),
 }
 
 

@@ -1,4 +1,4 @@
-# Orca Voice
+# Goblin Voice
 
 [English](README.md) · **Русский**
 
@@ -38,7 +38,7 @@ curl -L -o models/ggml-small-q5_1.bin \
 ## Запуск
 
 ```sh
-./start.sh     # или двойной клик по «Orca Voice.app» в этой папке
+./start.sh     # или двойной клик по «Goblin Voice.app» в этой папке
 ./stop.sh      # крестик окна тоже завершает всё целиком
 ```
 
@@ -93,7 +93,7 @@ curl -L -o models/ggml-small-q5_1.bin \
 | `speaker.py` | Следит за агентами и читает их ответы вслух |
 | `live.py` | Режим OpenAI |
 | `settings_server.py` | Локальный сервер (127.0.0.1) для окна |
-| `ui.html`, `ui_texts.js` | Окно и его тексты на двух языках |
+| `ui.html`, `ui_texts.js`, `logo.svg` | Окно, его тексты на двух языках и лого |
 | `i18n.py` | Статусы, журнал и фразы голоса на двух языках |
 | `config.default.json` | Настройки по умолчанию |
 
