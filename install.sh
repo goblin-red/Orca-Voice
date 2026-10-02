@@ -1,5 +1,5 @@
 #!/bin/bash
-# Установщик Goblin Voice для Mac с Apple Silicon (macOS 14+). Ничего не требует заранее:
+# Установщик GOBL(in) Voice для Mac с Apple Silicon (macOS 14+). Ничего не требует заранее:
 # сам скачивает программу, свой Python, whisper-server и модель Whisper.
 #
 #   установить или обновить:
@@ -20,7 +20,7 @@ WHISPER_SHA256="ababe6aaae08737db20bbcf3a9d6360d1fe3d08ae95b39572855b4f1277acb35
 PYTHON_VERSION="3.13"
 MODEL="ggml-small-q5_1.bin"
 MODELS_URL="https://huggingface.co/ggerganov/whisper.cpp/resolve/main"
-APP_NAME="Goblin Voice"
+APP_NAME="GOBL(in) Voice"
 BUNDLE_ID="local.orca-voice"
 
 DEST="${GOBLIN_VOICE_DIR:-$HOME/.goblin-voice}"
@@ -37,7 +37,7 @@ trap 'printf "\n%sInstallation failed (line %s). Run the installer again to retr
 
 # ---------- проверки
 
-[ "$(uname -s)" = "Darwin" ] || die "Goblin Voice works on macOS only."
+[ "$(uname -s)" = "Darwin" ] || die "GOBL(in) Voice works on macOS only."
 case "$DEST" in ""|"/"|"$HOME"|"$HOME/") die "Bad install folder: '$DEST'";; esac
 
 # папка «Программы»: общая, а если туда нельзя писать — личная
@@ -58,10 +58,10 @@ is_our_app() {
 # ---------- удаление
 
 if [ "${1:-}" = "--uninstall" ]; then
-  [ -f "$DEST/app.py" ] || die "Goblin Voice is not installed in $DEST."
+  [ -f "$DEST/app.py" ] || die "GOBL(in) Voice is not installed in $DEST."
   step "Removing $APP_NAME"
   sh "$DEST/stop.sh" >/dev/null 2>&1 || true
-  for app in "/Applications/$APP_NAME.app" "$HOME/Applications/$APP_NAME.app" "$APP"; do
+  for app in "/Applications/$APP_NAME.app" "$HOME/Applications/$APP_NAME.app" "$APP" "$APPS/Goblin Voice.app"; do
     if is_our_app "$app"; then rm -rf "$app"; info "removed $app"; fi
   done
   rm -rf "$DEST"
@@ -219,6 +219,8 @@ info "done"
 step "6/7  Adding $APP_NAME to $APPS"
 
 mkdir -p "$APPS"
+# значок с прежним названием убираем, чтобы в «Программах» не осталось двух
+if is_our_app "$APPS/Goblin Voice.app"; then rm -rf "$APPS/Goblin Voice.app"; fi
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS"
 cp "$DEST/$APP_NAME.app/Contents/Info.plist" "$APP/Contents/Info.plist"

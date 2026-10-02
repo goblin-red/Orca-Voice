@@ -1,5 +1,5 @@
 #!/bin/sh
-# Остановка Goblin Voice и его whisper-server
+# Остановка GOBL(in) Voice и его whisper-server
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
 
@@ -27,4 +27,4 @@ CONFIG=config.json
 [ -f "$CONFIG" ] || CONFIG=config.default.json
 PORT=$(python3 -c "import json; print(json.load(open('$CONFIG'))['whisper_port'])")
 pkill -f "whisper-server.*--port $PORT" 2>/dev/null
-echo "Goblin Voice stopped"
+echo "GOBL(in) Voice stopped"

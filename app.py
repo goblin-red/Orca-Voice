@@ -1,4 +1,4 @@
-"""Goblin Voice — окно-пульт голосового управления вкладками Orca.
+"""GOBL(in) Voice — окно-пульт голосового управления вкладками Orca.
 
 Два режима распознавания (тумблер в окне, при переключении — короткий звук):
   штатный — Whisper на компьютере;
@@ -139,7 +139,7 @@ def _our_processes():
 
 
 def kill_previous(log):
-    """Убивает прошлые запуски Goblin Voice (их whisper-server гасится при старте нового)."""
+    """Убивает прошлые запуски GOBL(in) Voice (их whisper-server гасится при старте нового)."""
     victims = _our_processes()
     for pid in victims:
         try:
@@ -635,8 +635,8 @@ def main():
         os._exit(0)
     signal.signal(signal.SIGTERM, on_term)
 
-    set_app_name("Goblin Voice")
-    window = webview.create_window("Goblin Voice", core.settings.url(),
+    set_app_name("GOBL(in) Voice")
+    window = webview.create_window("GOBL(in) Voice", core.settings.url(),
                                    width=860, height=920, min_size=(560, 600))
     window.events.closed += on_term   # крестик — выходим целиком
     webview.start()          # ждёт, пока окно открыто

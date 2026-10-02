@@ -83,8 +83,8 @@ const TEXTS = {
   // ---------- инструкция
   "g.start.h": ["Запуск и выход", "Starting and quitting"],
   "g.start.1": [
-    `Откройте <b>Goblin Voice</b> из папки «Программы» или через Spotlight (или запустите <code>./start.sh</code> в папке программы).`,
-    `Open <b>Goblin Voice</b> from Applications or Spotlight (or run <code>./start.sh</code> in the program folder).`,
+    `Откройте <b>GOBL(in) Voice</b> из папки «Программы» или через Spotlight (или запустите <code>./start.sh</code> в папке программы).`,
+    `Open <b>GOBL(in) Voice</b> from Applications or Spotlight (or run <code>./start.sh</code> in the program folder).`,
   ],
   "g.start.2": [
     "Если утилита уже была запущена — старая копия закрывается сама.",

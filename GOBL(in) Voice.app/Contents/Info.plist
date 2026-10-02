@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleName</key><string>Goblin Voice</string>
-  <key>CFBundleDisplayName</key><string>Goblin Voice</string>
+  <key>CFBundleName</key><string>GOBL(in) Voice</string>
+  <key>CFBundleDisplayName</key><string>GOBL(in) Voice</string>
   <key>CFBundleIdentifier</key><string>local.orca-voice</string>
   <key>CFBundleExecutable</key><string>orca-voice</string>
   <key>CFBundlePackageType</key><string>APPL</string>
@@ -11,6 +11,6 @@
   <key>CFBundleShortVersionString</key><string>1.0</string>
   <key>LSMinimumSystemVersion</key><string>14.0</string>
   <key>NSHighResolutionCapable</key><true/>
-  <key>NSMicrophoneUsageDescription</key><string>Goblin Voice listens for voice commands. / Goblin Voice слушает голосовые команды.</string>
+  <key>NSMicrophoneUsageDescription</key><string>GOBL(in) Voice listens for voice commands. / GOBL(in) Voice слушает голосовые команды.</string>
 </dict>
 </plist>

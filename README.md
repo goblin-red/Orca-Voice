@@ -1,10 +1,11 @@
-# Goblin Voice
+# GOBL(in) Voice
 
 **English** · [Русский](README.ru.md)
 
 A voice remote for coding agents running in [Orca](https://github.com/stablyai/orca) on macOS.
 Say a word — and Space or Enter goes to the Orca tab in focus. Dictate a prompt, jump to the next
 agent tab, and have the agent's answer read back to you. Hands stay off the keyboard.
+One of the extra apps of [GOBL(in)](https://goblin.red).
 
 - **Voice commands** — Space, Enter, next agent tab, stop the voice. The trigger words are yours to choose.
 - **Voice typing** — everything you say is typed into the focused tab; finish the phrase with the Enter word to send it.
@@ -31,13 +32,13 @@ It takes about two minutes and needs no administrator rights, Homebrew or Xcode.
 
 - puts the program into `~/.goblin-voice` with its own private Python — nothing else on your Mac is touched;
 - downloads `whisper-server` (whisper.cpp built for Apple Silicon) and the speech model (about 190 MB);
-- adds **Goblin Voice** to your Applications folder and starts it.
+- adds **GOBL(in) Voice** to your Applications folder and starts it.
 
 On the first start macOS asks for microphone access.
 
 | | |
 | --- | --- |
-| Start | Open **Goblin Voice** from Applications or Spotlight |
+| Start | Open **GOBL(in) Voice** from Applications or Spotlight |
 | Quit | Close the window |
 | Update | Run the install line again — your settings and models are kept |
 | Uninstall | `~/.goblin-voice/install.sh --uninstall` |
@@ -58,7 +59,7 @@ mkdir -p models
 curl -L -o models/ggml-small-q5_1.bin \
   https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin
 
-./start.sh     # or double-click "Goblin Voice.app" in this folder
+./start.sh     # or double-click "GOBL(in) Voice.app" in this folder
 ./stop.sh      # closing the window also quits everything
 ```
 
