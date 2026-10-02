@@ -25,7 +25,7 @@ Intel Macs are not supported yet.
 Paste this line into Terminal:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/goblin-red/Orca-Voice/main/install.sh | bash
 ```
 
 It takes about two minutes and needs no administrator rights, Homebrew or Xcode. The installer:
@@ -49,8 +49,8 @@ On the first start macOS asks for microphone access.
 Needs Python 3.13 or 3.14 and whisper.cpp (`brew install whisper-cpp`, provides `whisper-server`).
 
 ```sh
-git clone https://github.com/goblin-red/orca-voice.git
-cd orca-voice
+git clone https://github.com/goblin-red/Orca-Voice.git
+cd Orca-Voice
 
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt

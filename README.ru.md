@@ -25,7 +25,7 @@ Mac на Intel пока не поддерживаются.
 Вставьте эту строку в Терминал:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/goblin-red/Orca-Voice/main/install.sh | bash
 ```
 
 Это занимает около двух минут; права администратора, Homebrew и Xcode не нужны. Установщик:
@@ -50,8 +50,8 @@ curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.
 Нужны Python 3.13 или 3.14 и whisper.cpp (`brew install whisper-cpp`, даёт `whisper-server`).
 
 ```sh
-git clone https://github.com/goblin-red/orca-voice.git
-cd orca-voice
+git clone https://github.com/goblin-red/Orca-Voice.git
+cd Orca-Voice
 
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
