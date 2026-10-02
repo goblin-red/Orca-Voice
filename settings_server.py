@@ -105,7 +105,7 @@ class SettingsServer:
                     body = (HERE / name).read_text(encoding="utf-8")
                     if name == "ui.html":
                         # язык — сразу в странице: окно открывается на нужном языке без мигания
-                        body = body.replace('<html lang="ru">', f'<html lang="{i18n.get_lang()}">', 1)
+                        body = body.replace('<html lang="en">', f'<html lang="{i18n.get_lang()}">', 1)
                     self._send(body.encode(), content_type)
                 elif self.path == "/api/config":
                     if owner._voices is None:

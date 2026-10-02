@@ -10,7 +10,7 @@ agent tab, and have the agent's answer read back to you. Hands stay off the keyb
 - **Voice typing** — everything you say is typed into the focused tab; finish the phrase with the Enter word to send it.
 - **Answers read aloud** — when an agent (Claude, Codex, OpenCode) finishes, the macOS voice reads its reply.
 - **Runs locally** — speech recognition is [whisper.cpp](https://github.com/ggml-org/whisper.cpp) on your Mac.
-- **Two interface languages** — English and Russian, switched with the RU / EN buttons in the window header.
+- **Two interface languages** — English and Russian, English by default, switched with the EN / RU buttons in the window header.
 
 ## Requirements
 
@@ -65,7 +65,7 @@ at the end of a sentence: “audit the project, rex”.
 
 ## Languages
 
-- **Interface** — the RU / EN buttons in the window header. They switch the window, statuses, the log
+- **Interface** — English by default; the EN / RU buttons in the window header. They switch the window, statuses, the log
   and the service phrases the voice says.
 - **Recognition** — a separate setting: **Settings → Recognition (Whisper) → Language**.
 - **Voice** — pick a macOS voice that matches the language of your agents' answers.

@@ -1,7 +1,7 @@
 """Тексты утилиты на двух языках: статусы, журнал и фразы голоса (тексты окна — в ui_texts.js)."""
 
 LANGS = ("ru", "en")
-_lang = "ru"
+_lang = "en"     # главный язык — английский
 
 # ключ -> (русский, английский)
 TEXTS = {
@@ -85,7 +85,7 @@ TEXTS = {
 
 def set_lang(lang):
     global _lang
-    _lang = lang if lang in LANGS else "ru"
+    _lang = lang if lang in LANGS else "en"
 
 
 def get_lang():

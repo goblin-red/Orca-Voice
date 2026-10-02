@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -276,9 +276,9 @@
       <button data-tab="settings" data-i18n="tab.settings"></button>
       <button data-tab="guide" data-i18n="tab.guide"></button>
     </nav>
-    <div class="lang" title="Язык / Language">
-      <button data-lang="ru">RU</button>
+    <div class="lang" title="Language / Язык">
       <button data-lang="en">EN</button>
+      <button data-lang="ru">RU</button>
     </div>
   </div>
 </header>
@@ -599,7 +599,7 @@
   const $ = (id) => document.getElementById(id);
   let cfg = null;
   let ignoreEditor = null;
-  let lang = document.documentElement.lang === "en" ? "en" : "ru";   // язык подставляет сервер
+  let lang = document.documentElement.lang === "ru" ? "ru" : "en";   // язык подставляет сервер, главный — английский
   let lastMsg = ["", "", ""];
 
   // ================= язык =================
@@ -709,7 +709,7 @@
     $("ignoreBox").replaceChildren(ignoreEditor);
 
     // голоса: сначала голоса языка окна
-    const first = lang === "en" ? "en" : "ru";
+    const first = lang;
     const voices = [...data.voices].sort((a, b) =>
       (b.lang.startsWith(first) - a.lang.startsWith(first)) || a.name.localeCompare(b.name));
     $("voice").innerHTML = voices.map((v) => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join("");

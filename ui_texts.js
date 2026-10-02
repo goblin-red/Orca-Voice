@@ -196,8 +196,8 @@ const TEXTS = {
 
   "g.lang.h": ["Язык", "Language"],
   "g.lang.p": [
-    "Кнопки RU / EN в шапке окна переключают язык окна, статусов, журнала и служебных фраз голоса. Язык распознавания речи задаётся отдельно: «Настройки → Распознавание (Whisper) → Язык». Чтобы ответы читались правильно, выберите голос нужного языка в «Озвучке ответов».",
-    "The RU / EN buttons in the window header switch the language of the window, statuses, log and the voice's service phrases. The speech recognition language is set separately: Settings → Recognition (Whisper) → Language. To have answers read properly, pick a voice for the right language under “Reading answers aloud”.",
+    "Кнопки EN / RU в шапке окна переключают язык окна, статусов, журнала и служебных фраз голоса. Язык распознавания речи задаётся отдельно: «Настройки → Распознавание (Whisper) → Язык». Чтобы ответы читались правильно, выберите голос нужного языка в «Озвучке ответов».",
+    "The EN / RU buttons in the window header switch the language of the window, statuses, log and the voice's service phrases. The speech recognition language is set separately: Settings → Recognition (Whisper) → Language. To have answers read properly, pick a voice for the right language under “Reading answers aloud”.",
   ],
 
   "g.inside.h": ["Что внутри", "What's inside"],
