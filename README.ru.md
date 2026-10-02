@@ -14,37 +14,58 @@
 
 ## Что нужно
 
-- macOS 13 или новее
-- [Orca](https://github.com/stablyai/orca) и его команда `orca` в `PATH`
-- Python 3 (разработано и проверено на 3.14)
-- whisper.cpp: `brew install whisper-cpp` (даёт `whisper-server`)
+- Mac с Apple Silicon (M1 и новее) и macOS 14 или новее
+- [Orca](https://github.com/stablyai/orca)
+
+Mac на Intel пока не поддерживаются.
 
 ## Установка
+
+Вставьте эту строку в Терминал:
+
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh)"
+```
+
+Это занимает около двух минут; права администратора, Homebrew и Xcode не нужны. Установщик:
+
+- кладёт программу в `~/.goblin-voice` вместе со своим Python — больше на вашем Mac ничего не трогается;
+- скачивает `whisper-server` (whisper.cpp, собранный под Apple Silicon) и модель распознавания (около 190 МБ);
+- добавляет **Goblin Voice** в папку «Программы» и запускает его.
+
+При первом запуске macOS спросит доступ к микрофону. Окно открывается на английском —
+нажмите RU в шапке, а язык распознавания выберите в «Settings → Recognition (Whisper) → Language».
+
+| | |
+| --- | --- |
+| Запуск | Откройте **Goblin Voice** из «Программ» или через Spotlight |
+| Выход | Закройте окно |
+| Обновление | Выполните строку установки ещё раз — настройки и модели сохранятся |
+| Удаление | `~/.goblin-voice/install.sh --uninstall` |
+
+<details>
+<summary>Ручная установка (для разработчиков)</summary>
+
+Нужны Python 3.13 или 3.14 и whisper.cpp (`brew install whisper-cpp`, даёт `whisper-server`).
 
 ```sh
 git clone https://github.com/goblin-red/orca-voice.git
 cd orca-voice
 
-# окружение Python
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-# модель Whisper (около 190 МБ)
 mkdir -p models
 curl -L -o models/ggml-small-q5_1.bin \
   https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin
-```
 
-## Запуск
-
-```sh
 ./start.sh     # или двойной клик по «Goblin Voice.app» в этой папке
 ./stop.sh      # крестик окна тоже завершает всё целиком
 ```
 
-При первом запуске macOS спросит доступ к микрофону. Настройки сохраняются в `config.json`,
-он создаётся из `config.default.json` при первом запуске. Окно открывается на английском —
-нажмите RU в шапке, а язык распознавания выберите в «Настройки → Распознавание (Whisper) → Язык».
+Настройки сохраняются в `config.json`, он создаётся из `config.default.json` при первом запуске.
+
+</details>
 
 ## Голосовые команды
 
@@ -96,6 +117,9 @@ curl -L -o models/ggml-small-q5_1.bin \
 | `ui.html`, `ui_texts.js`, `logo.svg` | Окно, его тексты на двух языках и лого |
 | `i18n.py` | Статусы, журнал и фразы голоса на двух языках |
 | `config.default.json` | Настройки по умолчанию |
+| `install.sh` | Установщик |
+| `requirements.lock.txt` | Проверенные версии пакетов, их ставит установщик |
+| `tools/build-whisper-server.sh` | Собирает файл `whisper-server`, который лежит в выпуске |
 
 Планы на будущее — в [PLANS.md](PLANS.md).
 

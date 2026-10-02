@@ -14,36 +14,57 @@ agent tab, and have the agent's answer read back to you. Hands stay off the keyb
 
 ## Requirements
 
-- macOS 13 or newer
-- [Orca](https://github.com/stablyai/orca) with its `orca` command-line tool available in `PATH`
-- Python 3 (developed and tested on 3.14)
-- whisper.cpp: `brew install whisper-cpp` (provides `whisper-server`)
+- A Mac with Apple Silicon (M1 or newer) and macOS 14 or newer
+- [Orca](https://github.com/stablyai/orca)
+
+Intel Macs are not supported yet.
 
 ## Install
+
+Paste this line into Terminal:
+
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/goblin-red/orca-voice/main/install.sh)"
+```
+
+It takes about two minutes and needs no administrator rights, Homebrew or Xcode. The installer:
+
+- puts the program into `~/.goblin-voice` with its own private Python — nothing else on your Mac is touched;
+- downloads `whisper-server` (whisper.cpp built for Apple Silicon) and the speech model (about 190 MB);
+- adds **Goblin Voice** to your Applications folder and starts it.
+
+On the first start macOS asks for microphone access.
+
+| | |
+| --- | --- |
+| Start | Open **Goblin Voice** from Applications or Spotlight |
+| Quit | Close the window |
+| Update | Run the install line again — your settings and models are kept |
+| Uninstall | `~/.goblin-voice/install.sh --uninstall` |
+
+<details>
+<summary>Manual install (for developers)</summary>
+
+Needs Python 3.13 or 3.14 and whisper.cpp (`brew install whisper-cpp`, provides `whisper-server`).
 
 ```sh
 git clone https://github.com/goblin-red/orca-voice.git
 cd orca-voice
 
-# Python environment
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 
-# Whisper model (about 190 MB)
 mkdir -p models
 curl -L -o models/ggml-small-q5_1.bin \
   https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin
-```
 
-## Run
-
-```sh
 ./start.sh     # or double-click "Goblin Voice.app" in this folder
 ./stop.sh      # closing the window also quits everything
 ```
 
-On the first start macOS asks for microphone access. Your settings are saved to `config.json`,
-which is created from `config.default.json` on the first run.
+Your settings are saved to `config.json`, which is created from `config.default.json` on the first run.
+
+</details>
 
 ## Voice commands
 
@@ -98,6 +119,9 @@ Please note:
 | `ui.html`, `ui_texts.js`, `logo.svg` | The window, its texts in two languages and the logo |
 | `i18n.py` | Statuses, log and voice phrases in two languages |
 | `config.default.json` | Default settings |
+| `install.sh` | The installer |
+| `requirements.lock.txt` | Tested package versions used by the installer |
+| `tools/build-whisper-server.sh` | Builds the `whisper-server` file published in the release |
 
 Code comments are in Russian. Plans for the future are in [PLANS.md](PLANS.md) (in Russian).
 

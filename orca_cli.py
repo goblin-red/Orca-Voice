@@ -1,11 +1,13 @@
 """Работа с Orca через его CLI: какая вкладка в фокусе, переключение вкладок, отправка клавиш, статусы агентов."""
 
 import json
+import shutil
 import subprocess
 
 from i18n import t
 
-ORCA = "orca"
+# команда orca: из PATH, а если её там нет — прямо из приложения Orca
+ORCA = shutil.which("orca") or "/Applications/Orca.app/Contents/Resources/bin/orca"
 
 
 def _run(args, timeout=10):

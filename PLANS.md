@@ -68,3 +68,20 @@
   Если в одной папке два Codex, отличить их пока нельзя — привязать сессию к конкретной вкладке.
 - **Выбор вкладки голосом:** «вкладка два», «к кодексу».
 - **Автозапуск** при входе в систему (LaunchAgent) и своя иконка для `Goblin Voice.app`.
+
+## 3. Поддержка Mac на Intel
+
+Сейчас установщик (`install.sh`) работает только на Apple Silicon с macOS 14+. Что выяснено 2 октября 2026:
+
+- **whisper-server под Intel собирается и работает** (проверено через Rosetta). Флаги сборки:
+  `-DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_OSX_ARCHITECTURES=x86_64 -DGGML_METAL=OFF`
+  и `-DGGML_SSE42=ON -DGGML_AVX=ON -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON -DGGML_BMI2=ON`
+  (остальное — как в `tools/build-whisper-server.sh`).
+- **Модель на Intel — полегче**: `ggml-base-q5_1.bin` (фраза ~1,3 с через Rosetta против ~4 с у `small`).
+- **Что мешает:** у пакета `cryptography` (его тянет `aiortc`, нужный только режиму OpenAI) с версии 49
+  нет готовых сборок под Intel-Mac. При установке он пытается компилироваться (нужны Rust и OpenSSL) и падает.
+- **Варианты:** закрепить для Intel старые версии с готовыми сборками; либо ставить на Intel без режима OpenAI
+  (только он требует `aiortc`).
+- **Нужен настоящий Intel-Mac** для проверки: через Rosetta окно и микрофон не проверялись.
+- **Apple Silicon с macOS 13:** у пакета `av` готовые сборки только под macOS 14+, поэтому минимум — macOS 14.
+- В Homebrew готовый `whisper.cpp` есть только для ARM и свежих macOS — поэтому установщик берёт свою сборку из выпуска на GitHub.

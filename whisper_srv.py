@@ -26,9 +26,20 @@ class WhisperServer:
 
     # ---------- запуск / остановка
 
+    @staticmethod
+    def _find_binary():
+        """whisper-server: сначала свой (его кладёт установщик), потом из PATH и Homebrew."""
+        candidates = [
+            HERE / "bin" / "whisper-server",
+            shutil.which("whisper-server"),
+            "/opt/homebrew/bin/whisper-server",
+            "/usr/local/bin/whisper-server",
+        ]
+        return next((str(p) for p in candidates if p and Path(p).exists()), None)
+
     def start(self):
-        binary = shutil.which("whisper-server") or "/opt/homebrew/bin/whisper-server"
-        if not Path(binary).exists():
+        binary = self._find_binary()
+        if not binary:
             raise RuntimeError(t("err.no_whisper"))
 
         # путь к модели можно задавать от папки утилиты: models/ggml-small-q5_1.bin

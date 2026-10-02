@@ -159,6 +159,7 @@ class AnswerWatcher(threading.Thread):
         self._prev = {}                    # paneKey -> прошлое состояние агента в Orca
         self._spoken = deque(maxlen=30)    # уже прочитанные ответы (без повторов)
         self._codex = CodexLogs()
+        self._last_error = None            # последняя ошибка опроса (чтобы не повторять её в журнале)
         self._stop = threading.Event()
 
     def stop(self):
@@ -170,8 +171,12 @@ class AnswerWatcher(threading.Thread):
             try:
                 self._tick(first)
                 first = False
+                self._last_error = None
             except Exception as e:
-                self.log.warning("watcher: %s", e)
+                # одну и ту же ошибку (например, Orca закрыт) пишем один раз, а не при каждом опросе
+                if str(e) != self._last_error:
+                    self._last_error = str(e)
+                    self.log.warning("watcher: %s", e)
             self._stop.wait(self.cfg.get("poll_seconds", 2.0))
 
     # ---------- источники событий
