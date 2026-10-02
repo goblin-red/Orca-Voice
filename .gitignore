@@ -1,0 +1,16 @@
+# личные настройки — создаются из config.default.json при первом запуске
+config.json
+
+# журналы и pid
+logs/
+
+# модели Whisper (большие файлы, скачиваются отдельно)
+models/
+
+# окружение Python
+.venv/
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store

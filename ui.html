@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orca Voice</title>
+<style>
+  :root {
+    --bg: #f4f4f6;
+    --card: #ffffff;
+    --text: #1c1c1f;
+    --muted: #6b6b73;
+    --line: #e2e2e7;
+    --accent: #3a6df0;
+    --accent-soft: #e6edff;
+    --ok: #1f9d55;
+    --err: #d64545;
+    --chip: #eef0f4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17171a;
+      --card: #222226;
+      --text: #ececf0;
+      --muted: #9a9aa3;
+      --line: #34343a;
+      --accent: #6b93ff;
+      --accent-soft: #2a3350;
+      --chip: #303036;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 20px 16px 96px; }
+  h1 { font-size: 20px; margin: 0 0 2px; }
+  .status { color: var(--muted); margin-bottom: 18px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 4px; }
+  .card .hint { color: var(--muted); font-size: 12.5px; margin: 0 0 12px; }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+    border-top: 1px solid var(--line);
+  }
+  .row:first-of-type { border-top: 0; }
+  .row > label:not(.switch) { flex: 1; }
+  .row > .switch { align-self: center; }
+  .row small { display: block; color: var(--muted); font-size: 12px; }
+
+  /* команда: заголовок + варианты */
+  .cmd { padding: 12px 0; border-top: 1px solid var(--line); }
+  .cmd:first-of-type { border-top: 0; padding-top: 0; }
+  .cmd-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .cmd-head b { font-size: 14px; }
+  .cmd-head small { color: var(--muted); font-size: 12px; }
+  .cmd.off .chips { opacity: .45; }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    min-height: 40px;
+    cursor: text;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--chip);
+    border-radius: 6px;
+    padding: 3px 4px 3px 8px;
+  }
+  .chip button {
+    border: 0;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .chip button:hover { color: var(--err); }
+  .chips input {
+    flex: 1;
+    min-width: 140px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    padding: 3px;
+  }
+
+  /* переключатель */
+  .switch { position: relative; width: 40px; height: 24px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch span {
+    position: absolute; inset: 0;
+    background: var(--line);
+    border-radius: 12px;
+    transition: .15s;
+    cursor: pointer;
+  }
+  .switch span::before {
+    content: "";
+    position: absolute;
+    left: 3px; top: 3px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: .15s;
+  }
+  .switch input:checked + span { background: var(--accent); }
+  .switch input:checked + span::before { transform: translateX(16px); }
+
+  select, input[type=number], input[type=text] {
+    font: inherit;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 5px 8px;
+    max-width: 100%;
+  }
+  input[type=number] { width: 90px; }
+  select { max-width: 320px; }
+  .wide { width: 100%; margin-top: 6px; }
+  .range { display: flex; align-items: center; gap: 8px; }
+  .range input { width: 170px; }
+  .range output { width: 54px; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  button.btn {
+    font: inherit;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  button.btn:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  details summary { cursor: pointer; font-weight: 600; }
+
+  footer {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    padding: 12px 16px;
+  }
+  footer .inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #msg { flex: 1; color: var(--muted); }
+  #msg.ok { color: var(--ok); }
+  #msg.err { color: var(--err); }
+
+  @media (max-width: 520px) {
+    .row { flex-direction: column; align-items: stretch; }
+    .row > .switch { align-self: flex-start; }
+    .range input { flex: 1; }
+  }
+
+  /* ===== шапка и вкладки ===== */
+  header {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  header .inner {
+    max-width: 720px; margin: 0 auto; padding: 12px 16px 0;
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0 12px;
+  }
+  header h1 { font-size: 18px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .tabs { display: flex; gap: 4px; margin-left: auto; }
+
+  /* переключатель языка */
+  .lang {
+    display: flex; flex: none; margin-bottom: 8px;
+    border: 1px solid var(--line); border-radius: 7px; overflow: hidden;
+  }
+  .lang button {
+    font: inherit; font-size: 12px; font-weight: 600;
+    border: 0; background: none; color: var(--muted);
+    padding: 3px 9px; cursor: pointer;
+  }
+  .lang button.on { background: var(--accent); color: #fff; }
+  .tabs button {
+    font: inherit; border: 0; background: none; color: var(--muted);
+    padding: 8px 14px; border-bottom: 2px solid transparent; cursor: pointer;
+  }
+  .tabs button.on { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+  .page { display: none; }
+  .page.on { display: block; }
+  body:not(.settings) footer { display: none; }
+
+  /* ===== пульт ===== */
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); flex: none; }
+  .mode-listening .dot { background: var(--ok); }
+  .mode-live .dot { background: var(--err); animation: pulse 1s infinite; }
+  .mode-speaking .dot { background: var(--accent); }
+  .mode-paused .dot { background: #c9a227; }
+  .mode-error .dot { background: var(--err); }
+  @keyframes pulse { 50% { opacity: .35; } }
+
+  .hero { display: flex; align-items: center; gap: 12px; }
+  .hero .mode { font-size: 20px; font-weight: 650; }
+  .hero .status-line { color: var(--muted); }
+  .facts { margin-top: 12px; display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; }
+  .facts dt { color: var(--muted); }
+  .facts dd { margin: 0; word-break: break-word; }
+  .meter { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+  .meter div { height: 100%; width: 0; background: var(--ok); transition: width .15s; }
+
+  .controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .controls button { padding: 10px 12px; text-align: left; }
+  .controls button small { display: block; color: var(--muted); font-size: 12px; }
+  .controls button.active { border-color: var(--accent); background: var(--accent-soft); }
+  .controls button.live-on { border-color: var(--err); background: color-mix(in srgb, var(--err) 18%, var(--card)); }
+
+  .legend { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
+  .legend b { font-weight: 600; }
+  .legend span { color: var(--muted); }
+
+  /* ===== инструкция ===== */
+  .guide h2 { margin-bottom: 8px; }
+  .guide p, .guide li { margin: 0 0 6px; }
+  .guide ul, .guide ol { margin: 0; padding-left: 20px; }
+  .guide .kw {
+    background: var(--accent-soft); color: var(--text);
+    border-radius: 5px; padding: 1px 6px; font-weight: 600; white-space: nowrap;
+  }
+  .guide .dotline { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .guide .dotline .dot { width: 10px; height: 10px; }
+
+  .log {
+    font: 12px/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; height: 260px; overflow: auto; white-space: pre-wrap; word-break: break-word;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="inner">
+    <h1>🎙 Orca Voice</h1>
+    <nav class="tabs">
+      <button data-tab="dash" class="on" data-i18n="tab.dash"></button>
+      <button data-tab="settings" data-i18n="tab.settings"></button>
+      <button data-tab="guide" data-i18n="tab.guide"></button>
+    </nav>
+    <div class="lang" title="Язык / Language">
+      <button data-lang="ru">RU</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+</header>
+<main>
+
+  <!-- ===== Пульт ===== -->
+  <section class="page on" id="page-dash">
+    <section class="card">
+      <div class="hero" id="hero">
+        <div class="dot"></div>
+        <div>
+          <div class="mode" id="mode"></div>
+          <div class="status-line" id="statusLine"></div>
+        </div>
+      </div>
+      <dl class="facts">
+        <dt data-i18n="dash.tab"></dt><dd id="target">—</dd>
+        <dt data-i18n="dash.heard"></dt><dd id="heard">—</dd>
+        <dt data-i18n="dash.mic"></dt><dd><div class="meter"><div id="meter"></div></div></dd>
+      </dl>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="dash.controls"></h2>
+      <p class="hint" data-i18n="dash.controls.hint"></p>
+      <div class="controls">
+        <button class="btn" data-act="listen" id="bListen"><span data-i18n="btn.mic"></span><small></small></button>
+        <button class="btn" data-act="speak" id="bSpeak"><span data-i18n="btn.speak"></span><small></small></button>
+        <button class="btn" data-act="live" id="bLive"><span data-i18n="btn.mode"></span><small></small></button>
+        <button class="btn" data-act="typing" id="bTyping"><span data-i18n="btn.typing"></span><small></small></button>
+        <button class="btn" data-act="hush"><span data-i18n="btn.hush"></span><small data-i18n="btn.hush.sub"></small></button>
+        <button class="btn" data-act="space"><span data-i18n="btn.space"></span><small data-i18n="btn.focused"></small></button>
+        <button class="btn" data-act="enter"><span data-i18n="btn.enter"></span><small data-i18n="btn.focused"></small></button>
+        <button class="btn" data-act="switch"><span data-i18n="btn.switch"></span><small data-i18n="btn.switch.sub"></small></button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="dash.commands"></h2>
+      <p class="hint" data-i18n="dash.commands.hint"></p>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="dash.log"></h2>
+      <p class="hint" data-i18n="dash.log.hint"></p>
+      <div class="log" id="log"></div>
+    </section>
+  </section>
+
+  <!-- ===== Инструкция ===== -->
+  <section class="page guide" id="page-guide">
+    <section class="card">
+      <h2 data-i18n="g.start.h"></h2>
+      <ul>
+        <li data-i18n="g.start.1"></li>
+        <li data-i18n="g.start.2"></li>
+        <li data-i18n="g.start.3"></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.modes.h"></h2>
+      <ul>
+        <li data-i18n="g.modes.1"></li>
+        <li data-i18n="g.modes.2"></li>
+      </ul>
+      <p style="margin-top:8px" data-i18n="g.modes.p"></p>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.typing.h"></h2>
+      <ul>
+        <li data-i18n="g.typing.1"></li>
+        <li data-i18n="g.typing.2"></li>
+      </ul>
+      <p style="margin-top:8px" data-i18n="g.typing.p"></p>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.cmds.h"></h2>
+      <ul>
+        <li data-i18n="g.cmds.1"></li>
+        <li data-i18n="g.cmds.2"></li>
+        <li data-i18n="g.cmds.3"></li>
+        <li data-i18n="g.cmds.4"></li>
+      </ul>
+      <p style="margin-top:8px" data-i18n="g.cmds.p"></p>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.how.h"></h2>
+      <ul>
+        <li data-i18n="g.how.1"></li>
+        <li data-i18n="g.how.2"></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.speak.h"></h2>
+      <ul>
+        <li data-i18n="g.speak.1"></li>
+        <li data-i18n="g.speak.2"></li>
+        <li data-i18n="g.speak.3"></li>
+        <li data-i18n="g.speak.4"></li>
+        <li data-i18n="g.speak.5"></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.dot.h"></h2>
+      <div class="dotline mode-listening"><span class="dot"></span> <span data-i18n="g.dot.listening"></span></div>
+      <div class="dotline mode-live"><span class="dot"></span> <span data-i18n="g.dot.live"></span></div>
+      <div class="dotline mode-speaking"><span class="dot"></span> <span data-i18n="g.dot.speaking"></span></div>
+      <div class="dotline mode-paused"><span class="dot"></span> <span data-i18n="g.dot.paused"></span></div>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.fix.h"></h2>
+      <ol>
+        <li data-i18n="g.fix.1"></li>
+        <li data-i18n="g.fix.2"></li>
+        <li data-i18n="g.fix.3"></li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.lang.h"></h2>
+      <p data-i18n="g.lang.p"></p>
+    </section>
+
+    <section class="card">
+      <h2 data-i18n="g.inside.h"></h2>
+      <p data-i18n="g.inside.p"></p>
+    </section>
+  </section>
+
+  <!-- ===== Настройки ===== -->
+  <section class="page" id="page-settings">
+
+  <!-- ===== Режим ===== -->
+  <section class="card">
+    <h2 data-i18n="s.mode.h"></h2>
+    <p class="hint" data-i18n="s.mode.hint"></p>
+    <div class="row">
+      <label data-i18n="s.mode.live"></label>
+      <label class="switch"><input type="checkbox" id="modeLive" data-instant="live"><span></span></label>
+    </div>
+    <div class="row">
+      <label data-i18n="s.mode.typing"></label>
+      <label class="switch"><input type="checkbox" id="voice_typing" data-instant="typing"><span></span></label>
+    </div>
+  </section>
+
+  <!-- ===== Голосовой ввод ===== -->
+  <section class="card">
+    <h2 data-i18n="s.typing.h"></h2>
+    <p class="hint" data-i18n="s.typing.hint"></p>
+    <div class="row" style="display:block">
+      <label data-i18n="s.typing.ignore"></label>
+      <div id="ignoreBox" style="margin-top:6px"></div>
+    </div>
+    <div class="row">
+      <label data-i18n="s.typing.max"></label>
+      <div class="range"><input type="range" id="vad.dictation_max_s" min="5" max="60" step="5"><output></output></div>
+    </div>
+  </section>
+
+  <!-- ===== Голосовые команды ===== -->
+  <section class="card">
+    <h2 data-i18n="s.cmds.h"></h2>
+    <p class="hint" data-i18n="s.cmds.hint"></p>
+    <div id="commands"></div>
+    <div class="row">
+      <label data-i18n="s.cmds.max"></label>
+      <input type="number" id="max_words" min="1" max="30" step="1">
+    </div>
+  </section>
+
+  <!-- ===== Озвучка ===== -->
+  <section class="card">
+    <h2 data-i18n="s.speak.h"></h2>
+    <p class="hint" data-i18n="s.speak.hint"></p>
+    <div class="row">
+      <label data-i18n="s.speak.on"></label>
+      <label class="switch"><input type="checkbox" id="speak_answers"><span></span></label>
+    </div>
+    <div class="row">
+      <label data-i18n="s.speak.mute"></label>
+      <label class="switch"><input type="checkbox" id="mute_while_speaking"><span></span></label>
+    </div>
+    <div class="row">
+      <label data-i18n="s.speak.waiting"></label>
+      <label class="switch"><input type="checkbox" id="announce_waiting"><span></span></label>
+    </div>
+    <div class="row">
+      <label data-i18n="s.speak.voice"></label>
+      <select id="voice"></select>
+    </div>
+    <div class="row">
+      <label data-i18n="s.speak.rate"></label>
+      <div class="range"><input type="range" id="rate" min="100" max="320" step="10"><output for="rate"></output></div>
+    </div>
+    <div class="row">
+      <label data-i18n="s.speak.max"></label>
+      <input type="number" id="max_speech_chars" min="100" max="20000" step="100">
+    </div>
+    <div class="row">
+      <label data-i18n="s.speak.check"></label>
+      <button class="btn" id="testVoice" data-i18n="s.speak.test"></button>
+    </div>
+  </section>
+
+  <!-- ===== Live ===== -->
+  <section class="card">
+    <h2 data-i18n="s.live.h"></h2>
+    <p class="hint" data-i18n="s.live.hint"></p>
+    <div class="row">
+      <label data-i18n="s.live.max"></label>
+      <input type="number" id="live_max_minutes" min="1" max="120" step="1">
+    </div>
+  </section>
+
+  <!-- ===== Whisper ===== -->
+  <section class="card">
+    <h2 data-i18n="s.whisper.h"></h2>
+    <p class="hint" data-i18n="s.whisper.hint"></p>
+    <div class="row">
+      <label data-i18n="s.whisper.model"></label>
+      <select id="model"></select>
+    </div>
+    <div class="row">
+      <label data-i18n="s.whisper.lang"></label>
+      <select id="language">
+        <option value="ru">Русский</option>
+        <option value="auto" data-i18n="s.whisper.auto"></option>
+        <option value="en">English</option>
+        <option value="uk">Українська</option>
+      </select>
+    </div>
+    <div class="row" style="display:block">
+      <label data-i18n="s.whisper.prompt"></label>
+      <input type="text" id="prompt" class="wide" data-i18n-ph="s.whisper.empty">
+    </div>
+  </section>
+
+  <!-- ===== Микрофон ===== -->
+  <section class="card">
+    <h2 data-i18n="s.mic.h"></h2>
+    <p class="hint" data-i18n="s.mic.hint"></p>
+    <div class="row">
+      <label data-i18n="s.mic.level"></label>
+      <div class="range"><input type="range" id="vad.min_level" min="0.002" max="0.06" step="0.001"><output></output></div>
+    </div>
+    <div class="row">
+      <label data-i18n="s.mic.ratio"></label>
+      <div class="range"><input type="range" id="vad.start_ratio" min="1.5" max="8" step="0.1"><output></output></div>
+    </div>
+    <div class="row">
+      <label data-i18n="s.mic.silence"></label>
+      <div class="range"><input type="range" id="vad.silence_ms" min="300" max="1500" step="50"><output></output></div>
+    </div>
+    <div class="row">
+      <label data-i18n="s.mic.min"></label>
+      <div class="range"><input type="range" id="vad.min_speech_ms" min="100" max="800" step="50"><output></output></div>
+    </div>
+    <div class="row">
+      <label data-i18n="s.mic.max"></label>
+      <div class="range"><input type="range" id="vad.max_speech_s" min="2" max="10" step="0.5"><output></output></div>
+    </div>
+  </section>
+
+  <!-- ===== Прочее ===== -->
+  <section class="card">
+    <h2 data-i18n="s.misc.h"></h2>
+    <div class="row">
+      <label data-i18n="s.misc.sounds"></label>
+      <label class="switch"><input type="checkbox" id="sounds"><span></span></label>
+    </div>
+    <div class="row">
+      <label data-i18n="s.misc.poll"></label>
+      <input type="number" id="poll_seconds" min="0.5" max="30" step="0.5">
+    </div>
+    <div class="row">
+      <label data-i18n="s.misc.keys"></label>
+      <div class="buttons">
+        <button class="btn" data-act="space" data-i18n="s.misc.space"></button>
+        <button class="btn" data-act="enter" data-i18n="s.misc.enter"></button>
+      </div>
+    </div>
+    <details style="margin-top:10px">
+      <summary data-i18n="s.misc.advanced"></summary>
+      <div class="row">
+        <label data-i18n="s.misc.wport"></label>
+        <input type="number" id="whisper_port" min="1024" max="65535">
+      </div>
+      <div class="row">
+        <label data-i18n="s.misc.sport"></label>
+        <input type="number" id="settings_port" min="1024" max="65535">
+      </div>
+    </details>
+  </section>
+
+  </section>
+</main>
+
+<footer>
+  <div class="inner">
+    <span id="msg"></span>
+    <button class="btn" id="reset" data-i18n="btn.cancel"></button>
+    <button class="btn primary" id="save" data-i18n="btn.save"></button>
+  </div>
+</footer>
+
+<script src="/ui_texts.js"></script>
+<script>
+  const COMMANDS = ["space", "enter", "switch", "stop"];   // «toggle» (тузик-арбузик) временно выключен
+  const $ = (id) => document.getElementById(id);
+  let cfg = null;
+  let ignoreEditor = null;
+  let lang = document.documentElement.lang === "en" ? "en" : "ru";   // язык подставляет сервер
+  let lastMsg = ["", "", ""];
+
+  // ================= язык =================
+  const T = (key) => (TEXTS[key] || [key, key])[lang === "en" ? 1 : 0];
+  const quote = (word) => (lang === "en" ? `“${word}”` : `«${word}»`);
+
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach((el) => { el.innerHTML = T(el.dataset.i18n); });
+    document.querySelectorAll("[data-i18n-ph]").forEach((el) => { el.placeholder = T(el.dataset.i18nPh); });
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => { el.title = T(el.dataset.i18nTitle); });
+    document.querySelectorAll(".lang button").forEach((b) => b.classList.toggle("on", b.dataset.lang === lang));
+    renderLegend();
+    msg(...lastMsg);
+  }
+
+  async function setLang(next) {
+    if (next === lang) return;
+    lang = next;
+    applyLang();
+    await post("/api/lang", { lang });     // статусы, журнал и голос — тоже на новом языке
+    if (cfg) cfg.ui_language = lang;
+    poll();
+  }
+
+  // ---------- чтение/запись вложенных полей вида "vad.min_level"
+  const getPath = (obj, path) => path.split(".").reduce((o, k) => o?.[k], obj);
+  const setPath = (obj, path, val) => {
+    const keys = path.split(".");
+    const last = keys.pop();
+    keys.reduce((o, k) => (o[k] ??= {}), obj)[last] = val;
+  };
+
+  // ---------- редактор вариантов (чипы)
+  function chipEditor(words) {
+    const box = document.createElement("div");
+    box.className = "chips";
+    const input = document.createElement("input");
+    input.dataset.i18nPh = "chips.add";
+    input.placeholder = T("chips.add");
+
+    const add = (w) => {
+      w = w.trim();
+      if (!w || [...box.querySelectorAll(".chip span")].some((s) => s.textContent === w)) return;
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.innerHTML = "<span></span><button data-i18n-title='chips.remove'>×</button>";
+      chip.firstChild.textContent = w;
+      chip.lastChild.title = T("chips.remove");
+      chip.lastChild.onclick = () => { chip.remove(); dirty(); };
+      box.insertBefore(chip, input);
+    };
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === ",") {
+        e.preventDefault();
+        input.value.split(",").forEach(add);
+        input.value = "";
+        dirty();
+      } else if (e.key === "Backspace" && !input.value) {
+        box.querySelectorAll(".chip").length && box.querySelector(".chip:last-of-type")?.remove();
+        dirty();
+      }
+    });
+    input.addEventListener("blur", () => {
+      if (input.value.trim()) { input.value.split(",").forEach(add); input.value = ""; dirty(); }
+    });
+    box.onclick = (e) => { if (e.target === box) input.focus(); };
+
+    box.appendChild(input);
+    words.forEach(add);
+    box.words = () => [...box.querySelectorAll(".chip span")].map((s) => s.textContent);
+    return box;
+  }
+
+  function renderCommands() {
+    const root = $("commands");
+    root.innerHTML = "";
+    for (const key of COMMANDS) {
+      const data = cfg.commands[key] || { enabled: true, words: [] };
+      const wrap = document.createElement("div");
+      wrap.className = "cmd" + (data.enabled ? "" : " off");
+      // подписи — через data-i18n: при смене языка они переводятся, а введённые варианты остаются
+      wrap.innerHTML = `
+        <div class="cmd-head">
+          <label class="switch"><input type="checkbox"><span></span></label>
+          <div><b data-i18n="cmd.${key}.title"></b> <small>— <span data-i18n="cmd.${key}.desc"></span></small></div>
+        </div>`;
+      wrap.querySelectorAll("[data-i18n]").forEach((el) => { el.textContent = T(el.dataset.i18n); });
+      const toggle = wrap.querySelector("input");
+      toggle.checked = data.enabled;
+      toggle.onchange = () => { wrap.classList.toggle("off", !toggle.checked); dirty(); };
+      const chips = chipEditor(data.words || []);
+      wrap.appendChild(chips);
+      wrap.collect = () => ({ enabled: toggle.checked, words: chips.words() });
+      wrap.dataset.key = key;
+      root.appendChild(wrap);
+    }
+  }
+
+  // ---------- заполнение формы
+  function fill(data) {
+    cfg = data.config;
+
+    renderCommands();
+    ignoreEditor = chipEditor(cfg.dictation_ignore || []);
+    $("ignoreBox").replaceChildren(ignoreEditor);
+
+    // голоса: сначала голоса языка окна
+    const first = lang === "en" ? "en" : "ru";
+    const voices = [...data.voices].sort((a, b) =>
+      (b.lang.startsWith(first) - a.lang.startsWith(first)) || a.name.localeCompare(b.name));
+    $("voice").innerHTML = voices.map((v) => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join("");
+
+    // модели
+    const models = data.models.includes(cfg.model) ? data.models : [cfg.model, ...data.models];
+    $("model").innerHTML = models.map((m) => `<option value="${m}">${m.split("/").pop()} — ${m.split("/").slice(-3, -1).join("/")}</option>`).join("");
+
+    document.querySelectorAll("input[id], select[id]").forEach((el) => {
+      const val = getPath(cfg, el.id);
+      if (val === undefined) return;
+      if (el.type === "checkbox") el.checked = !!val;
+      else el.value = val;
+      showRange(el);
+    });
+    msg("");
+  }
+
+  function showRange(el) {
+    if (el.type === "range") el.parentElement.querySelector("output").textContent = el.value;
+  }
+
+  // ---------- сбор формы
+  function collect() {
+    const out = JSON.parse(JSON.stringify(cfg));
+    document.querySelectorAll("input[id], select[id]").forEach((el) => {
+      if (getPath(cfg, el.id) === undefined) return;
+      let val;
+      if (el.type === "checkbox") val = el.checked;
+      else if (el.type === "number" || el.type === "range") val = Number(el.value);
+      else val = el.value;
+      setPath(out, el.id, val);
+    });
+    document.querySelectorAll("#commands .cmd").forEach((w) => { out.commands[w.dataset.key] = w.collect(); });
+    if (ignoreEditor) out.dictation_ignore = ignoreEditor.words();
+    return out;
+  }
+
+  // ---------- сообщения (по ключу — чтобы переводились при смене языка)
+  function msg(key, kind = "", extra = "") {
+    lastMsg = [key, kind, extra];
+    $("msg").textContent = key ? T(key) + extra : "";
+    $("msg").className = kind;
+  }
+  function dirty() { msg("msg.dirty"); }
+
+  async function load() {
+    const r = await fetch("/api/config");
+    fill(await r.json());
+  }
+
+  async function post(path, body) {
+    const r = await fetch(path, { method: "POST", body: JSON.stringify(body) });
+    return r.json();
+  }
+
+  // ---------- события
+  document.addEventListener("input", (e) => { showRange(e.target); if (e.target.id && !e.target.dataset.instant) dirty(); });
+  document.querySelectorAll("[data-instant]").forEach((el) => (el.onchange = () => {
+    post("/api/action", { name: el.dataset.instant }).then(poll);
+  }));
+  $("save").onclick = async () => {
+    const res = await post("/api/config", collect());
+    if (res.ok) { await load(); renderLegend(); msg("msg.saved", "ok"); }
+    else msg("msg.error", "err", res.error);
+  };
+  $("reset").onclick = load;
+  $("testVoice").onclick = () => post("/api/test-voice", { voice: $("voice").value, rate: Number($("rate").value) });
+
+  // клики ловим на документе: тексты с кнопками и ссылками перерисовываются при смене языка
+  document.addEventListener("click", (e) => {
+    const act = e.target.closest("[data-act]");
+    if (act) {
+      e.preventDefault();
+      post("/api/action", { name: act.dataset.act }).then(poll);
+      return;
+    }
+    const langButton = e.target.closest(".lang button");
+    if (langButton) setLang(langButton.dataset.lang);
+  });
+
+  // ================= вкладки =================
+  function showTab(name) {
+    document.querySelectorAll(".tabs button").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
+    document.querySelectorAll(".page").forEach((p) => p.classList.toggle("on", p.id === "page-" + name));
+    document.body.classList.toggle("settings", name === "settings");
+  }
+  document.querySelectorAll(".tabs button").forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
+
+  // ================= пульт =================
+  function renderLegend() {
+    if (!cfg) return;
+    // ключевые слова в инструкции
+    document.querySelectorAll(".kw[data-cmd]").forEach((el) => {
+      el.textContent = quote(((cfg.commands[el.dataset.cmd] || {}).words || [])[0] || "—");
+    });
+    $("legend").innerHTML = "";
+    for (const key of COMMANDS) {
+      const data = cfg.commands[key] || {};
+      const b = document.createElement("b");
+      b.textContent = (data.words || [])[0] || "—";
+      if (!data.enabled) b.style.textDecoration = "line-through";
+      const s = document.createElement("span");
+      s.textContent = T(`cmd.${key}.desc`) + (data.enabled ? "" : T("legend.off"));
+      $("legend").append(b, s);
+    }
+  }
+
+  async function poll() {
+    try {
+      const st = await (await fetch("/api/state")).json();
+      $("hero").parentElement.className = "card mode-" + st.mode;
+      $("mode").textContent = TEXTS["mode." + st.mode] ? T("mode." + st.mode) : st.mode;
+      $("statusLine").textContent = st.status;
+      $("target").textContent = st.target || "—";
+      $("heard").textContent = st.heard || "—";
+      $("meter").style.width = Math.min(100, st.level * 1500) + "%";
+
+      $("bListen").classList.toggle("active", st.listening);
+      $("bListen").querySelector("small").textContent = T(st.listening ? "sub.listening" : "sub.paused");
+      $("bSpeak").classList.toggle("active", st.speak_answers);
+      $("bSpeak").querySelector("small").textContent = T(st.speak_answers ? "sub.on" : "sub.off");
+      $("bLive").classList.toggle("live-on", st.live);
+      $("bLive").querySelector("small").textContent = T(st.live ? "sub.live" : "sub.standard");
+      $("bTyping").classList.toggle("active", st.voice_typing);
+      $("bTyping").querySelector("small").textContent = T(st.voice_typing ? "sub.typing" : "sub.commands");
+      if (document.activeElement !== $("modeLive")) $("modeLive").checked = st.live;
+      if (document.activeElement !== $("voice_typing")) $("voice_typing").checked = st.voice_typing;
+      if (cfg) cfg.voice_typing = st.voice_typing;
+      if (st.mode === "listening" || st.mode === "live") $("mode").textContent += T(st.voice_typing ? "mode.typing" : "mode.commands");
+
+      // журнал: свежие строки сверху
+      const box = $("log");
+      const atTop = box.scrollTop < 20;
+      const text = st.log.join("\n");     // сервер уже отдаёт свежие первыми
+      if (box.textContent !== text) {
+        box.textContent = text;
+        if (atTop) box.scrollTop = 0;
+      }
+    } catch (e) {
+      $("mode").textContent = T("mode.offline");
+    }
+  }
+
+  // ================= запуск =================
+  $("mode").textContent = T("mode.starting");
+  applyLang();
+  load().then(renderLegend).catch((e) => msg("msg.load_failed", "err", String(e)));
+  setInterval(poll, 700);
+  poll();
+</script>
+</body>
+</html>

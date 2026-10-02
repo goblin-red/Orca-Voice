@@ -1,0 +1,11 @@
+# окно
+pywebview>=6.2
+
+# микрофон
+sounddevice>=0.5
+numpy>=2.0
+
+# режим OpenAI (WebRTC + WebSocket)
+aiortc>=1.15
+av>=17
+websockets>=15

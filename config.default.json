@@ -1,0 +1,95 @@
+{
+  "ui_language": "en",
+  "commands": {
+    "space": {
+      "enabled": true,
+      "words": [
+        "dumble bumble",
+        "дамбл-бамбл"
+      ]
+    },
+    "enter": {
+      "enabled": true,
+      "words": [
+        "rex",
+        "reks",
+        "recs",
+        "рекс",
+        "рэкс",
+        "рекз",
+        "рэкз"
+      ]
+    },
+    "toggle": {
+      "enabled": true,
+      "words": [
+        "тузик-арбузик",
+        "батузик-арбузик"
+      ]
+    },
+    "switch": {
+      "enabled": true,
+      "words": [
+        "switch terminal",
+        "переключи терминал",
+        "переключить терминал"
+      ]
+    },
+    "stop": {
+      "enabled": true,
+      "words": [
+        "shut up",
+        "заткнись",
+        "заткнитесь",
+        "заткнися",
+        "заткнусь"
+      ]
+    }
+  },
+  "max_words": 6,
+  "model": "models/ggml-small-q5_1.bin",
+  "model_dirs": [],
+  "whisper_port": 8791,
+  "language": "en",
+  "prompt": "",
+  "speak_answers": true,
+  "announce_waiting": true,
+  "voice": "Samantha",
+  "rate": 190,
+  "max_speech_chars": 2500,
+  "live_max_minutes": 10,
+  "sounds": true,
+  "poll_seconds": 0.5,
+  "settings_port": 8792,
+  "vad": {
+    "min_level": 0.012,
+    "start_ratio": 3,
+    "silence_ms": 600,
+    "min_speech_ms": 250,
+    "max_speech_s": 4,
+    "dictation_max_s": 30
+  },
+  "dictation_ignore": [
+    "thank you for watching",
+    "thanks for watching",
+    "subtitles by",
+    "please subscribe",
+    "продолжение следует",
+    "субтитры",
+    "редактор субтитров",
+    "корректор",
+    "спасибо за просмотр",
+    "подписывайтесь на канал",
+    "ставьте лайки",
+    "смешка",
+    "смотрите на видео",
+    "до новых встреч",
+    "динамичная музыка",
+    "спокойная музыка",
+    "аплодисменты",
+    "слышен"
+  ],
+  "voice_typing": false,
+  "mute_while_speaking": true,
+  "speech_tail_s": 1
+}
