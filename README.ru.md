@@ -121,7 +121,7 @@ curl -L -o models/ggml-small-q5_1.bin \
 | `requirements.lock.txt` | Проверенные версии пакетов, их ставит установщик |
 | `tools/build-whisper-server.sh` | Собирает файл `whisper-server`, который лежит в выпуске |
 
-Планы на будущее — в [PLANS.md](PLANS.md).
+Список изменений — в [CHANGELOG.md](CHANGELOG.md), планы на будущее — в [PLANS.md](PLANS.md).
 
 ## Лицензия
 

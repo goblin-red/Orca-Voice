@@ -123,7 +123,7 @@ Please note:
 | `requirements.lock.txt` | Tested package versions used by the installer |
 | `tools/build-whisper-server.sh` | Builds the `whisper-server` file published in the release |
 
-Code comments are in Russian. Plans for the future are in [PLANS.md](PLANS.md) (in Russian).
+Code comments are in Russian. Changes are listed in [CHANGELOG.md](CHANGELOG.md), plans for the future in [PLANS.md](PLANS.md) (both in Russian).
 
 ## License
 
