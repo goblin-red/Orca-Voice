@@ -1,4 +1,10 @@
-# GOBL(in) Voice
+<p align="center"><img src="docs/banner.png" alt="GOBL(in) Voice: voice control and dictation for AI coding agents on macOS" width="100%"></p>
+
+# GOBL(in) Voice — voice control and dictation for Claude Code, Codex and Orca on macOS
+
+![macOS 14+](https://img.shields.io/badge/macOS-14+-000000?logo=apple&logoColor=white) ![Apple Silicon M1+](https://img.shields.io/badge/Apple%20Silicon-M1+-555555) ![speech Whisper](https://img.shields.io/badge/speech-Whisper-74aa9c) [![license MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![GitHub stars](https://img.shields.io/github/stars/goblin-red/Orca-Voice?style=social)](https://github.com/goblin-red/Orca-Voice/stargazers)
+
+**Talk to your AI coding agents instead of typing.** Dictate prompts into Claude Code, Codex and other agents running in Orca, send them with a voice command, switch between agent tabs and hear the answers read aloud. Speech recognition runs locally with Whisper (whisper.cpp), so your voice stays on your Mac. Hands-free vibe coding.
 
 **English** · [Русский](README.ru.md)
 
@@ -125,6 +131,32 @@ Please note:
 | `tools/build-whisper-server.sh` | Builds the `whisper-server` file published in the release |
 
 Code comments are in Russian. Changes are listed in [CHANGELOG.md](CHANGELOG.md), plans for the future in [PLANS.md](PLANS.md) (both in Russian).
+
+## FAQ
+
+**How do I talk to Claude Code or Codex by voice?**
+Install GOBL(in) Voice, turn on voice typing and speak: your words are typed into the focused agent tab. End the phrase with the Enter word ("rex" by default) to send it, and the agent's answer is read back to you.
+
+**Does it work offline?**
+Yes. The standard mode uses whisper.cpp on your Mac and the built-in macOS voices — no audio leaves the computer. The optional OpenAI mode streams audio to OpenAI's realtime speech service.
+
+**Which agents are supported?**
+Any agent running in an Orca terminal tab: Claude Code, Codex, OpenCode and others. Answers are read aloud when the agent finishes its turn.
+
+## More GOBL(in) apps
+
+Free and open source, from the makers of [GOBL(in)](https://goblin.red):
+
+| App | What it does |
+| --- | --- |
+| [GOBL(in) Remote](https://github.com/goblin-red/Goblin-Remote) | self-hosted remote desktop for macOS in any browser, over cheap PHP hosting |
+| [GOBL(in) Session Viewer](https://github.com/goblin-red/Session-Viewer) | every Claude Code, Codex, Grok and OpenCode session in one window |
+| [GOBL(in) Drag & Taskbar](https://github.com/goblin-red/Drag-and-Taskbar) | move windows with trackpad gestures, a real taskbar and Alt-Tab for macOS |
+| [GOBL(in) Convert](https://github.com/goblin-red/Photo-Convert) | fast batch JPEG converter and photo resizer for macOS |
+| [GOBL(in) Workflow](https://github.com/goblin-red/Workflow) | visual flowchart workflows run by AI coding agents |
+
+If this project is useful to you, please ⭐ star it — it helps other people find it.
+
 
 ## License
 
